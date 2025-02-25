@@ -5,9 +5,9 @@ use App\Http\Controllers\API\GroupController;
 use App\Http\Controllers\API\GroupStudentController;
 use App\Http\Controllers\API\GroupSubjectController;
 use App\Http\Controllers\API\RoomController;
+use App\Http\Controllers\API\SubjectController;
+use App\Http\Controllers\API\SubjectTeacherController;
 use App\Http\Controllers\GroupTeacherController;
-use App\Http\Controllers\SubjectController;
-use App\Http\Controllers\SubjectTeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

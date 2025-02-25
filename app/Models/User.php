@@ -34,6 +34,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Roles::class, 'role_user', 'user_id', 'role_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

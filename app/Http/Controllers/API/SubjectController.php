@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Models\Group;
+use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
@@ -88,7 +88,7 @@ class SubjectController extends Controller
      */
     public function destroy(Subject $subject)
     {
-        Subject::query()->delete();
+        $subject->query()->delete();
         return response()->json(['message' => 'Subject deleted successfully!']);
     }
 }
