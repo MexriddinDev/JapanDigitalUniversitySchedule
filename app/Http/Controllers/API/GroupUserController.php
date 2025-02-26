@@ -8,7 +8,7 @@ use App\Http\Requests\UpdateGroupUserRequest;
 use App\Models\Group;
 use Illuminate\Http\Request;
 
-class GroupMembersController extends Controller
+class GroupUserController extends Controller
 {
     public function store(StoreGroupUserRequest $request)
     {
