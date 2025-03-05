@@ -27,3 +27,4 @@ class SubjectTeacherController extends Controller
     }
 
 }
+

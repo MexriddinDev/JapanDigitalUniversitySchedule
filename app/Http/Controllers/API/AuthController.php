@@ -29,7 +29,7 @@ class AuthController extends Controller
         ]);
         $user = User::query()->where('email', $validatedData['email'])->first();
         if (!$user || !Hash::check($validatedData['password'], $user->password)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized'], 200);
         }
         $token = $user->createToken('token')->plainTextToken;
 

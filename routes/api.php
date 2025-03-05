@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::get('logout', [AuthController::class,'logout']);
+    Route::post('logout', [AuthController::class,'logout']);
 
     Route::resource('groups', GroupController::class);
     Route::resource('group-subjects', GroupSubjectController::class);
