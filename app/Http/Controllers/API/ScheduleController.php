@@ -28,7 +28,7 @@ class ScheduleController extends Controller
 
 
         Schedule::query()->create($validated);
-        return response()->json(['message'=>'Schedule created successfully'], 201);
+        return response()->json(['message' => 'Schedule created successfully'], 201);
     }
 
 

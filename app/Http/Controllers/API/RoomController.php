@@ -51,7 +51,7 @@ class RoomController extends Controller
 
         Room::query()->create($validator);
 
-        return response()->json(['message' => 'Room successfully created']);
+        return response()->json(['message' => 'Room successfully created'],201);
     }
 
     /**

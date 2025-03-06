@@ -3,28 +3,45 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 
 class SubjectTeacherController extends Controller
 {
     public function store(Request $request)
     {
-        $validator = $request->validate([
+        $validated = $request->validate([
             'subject_id' => 'required|exists:subjects,id',
-            'teacher_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,id',
         ]);
 
-        $teacher = User::query()->find($validator['teacher_id']);
+        $subject = Subject::findOrFail($validated['subject_id']);
+        $subject->teachers()->attach($validated['user_id']);
 
-        if (!$teacher) {
-            return response()->json(['error' => 'Teacher not found'], 404);
-        }
-
-        $teacher->subjects()->attach($validator['subject_id']);
-
-        return response()->json(['message' => 'Subject Teacher Added'], 201);
+        return response()->json(['message' => 'Teacher attached to subject successfully'], 201);
     }
 
-}
+    public function update(string $id, Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
 
+        $subject = Subject::findOrFail($id);
+        $subject->teachers()->detach($validated['user_id']);
+
+        return response()->json(['message' => 'Teacher update from subject successfully'], 200);
+    }
+
+    public function destroy(string $id, Request $request)
+    {
+        $validated = $request->validate([
+            'subject_id' => 'required|exists:subjects,id',
+        ]);
+
+        $subject = Subject::findOrFail($validated['subject_id']);
+        $subject->teachers()->detach($id);
+
+        return response()->json(['message' => 'Teacher detached from subject successfully'], 200);
+    }
+}

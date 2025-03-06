@@ -2,58 +2,65 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Group;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use PHPUnit\Framework\Attributes\Test;
 
 class GroupControllerTest extends TestCase
 {
-    use RefreshDatabase; // Test har safar yangidan ishlashi uchun
+    use RefreshDatabase;
 
-
-    public function user_can_get_list_of_groups()
+    #[Test]
+    public function it_can_list_groups()
     {
+        Sanctum::actingAs(User::factory()->create());
+
         Group::factory()->count(5)->create();
 
         $response = $this->getJson('/api/groups');
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    '*' => ['id', 'name', 'created_at', 'updated_at']
-                ]
-            ]);
+            ->assertJsonCount(5, 'data');
     }
 
-
-    public function user_can_create_a_group()
+    #[Test]
+    public function it_can_create_a_group()
     {
-        $data = ['name' => 'Test Group'];
+        Sanctum::actingAs(User::factory()->create());
+
+        $data = ['name' => 'php'];
 
         $response = $this->postJson('/api/groups', $data);
 
         $response->assertStatus(201)
-            ->assertJson(['message' => 'Group created successfully!']);
+            ->assertJsonFragment(['message' => 'Group created successfully!']);
 
         $this->assertDatabaseHas('groups', $data);
     }
 
-
-    public function user_can_view_a_single_group()
+    #[Test]
+    public function it_can_show_a_group()
     {
+        Sanctum::actingAs(User::factory()->create());
+
         $group = Group::factory()->create();
 
         $response = $this->getJson("/api/groups/{$group->id}");
 
         $response->assertStatus(200)
-            ->assertJson(['id' => $group->id, 'name' => $group->name]);
+            ->assertJson(['id' => $group->id]);
     }
 
-
-    public function user_can_update_a_group()
+    #[Test]
+    public function it_can_update_a_group()
     {
+        Sanctum::actingAs(User::factory()->create());
+
         $group = Group::factory()->create();
-        $updateData = ['name' => 'Updated Group Name'];
+        $updateData = ['name' => 'Updated Name'];
 
         $response = $this->putJson("/api/groups/{$group->id}", $updateData);
 
@@ -63,9 +70,11 @@ class GroupControllerTest extends TestCase
         $this->assertDatabaseHas('groups', $updateData);
     }
 
-
-    public function user_can_delete_a_group()
+    #[Test]
+    public function it_can_delete_a_group()
     {
+        Sanctum::actingAs(User::factory()->create());
+
         $group = Group::factory()->create();
 
         $response = $this->deleteJson("/api/groups/{$group->id}");
