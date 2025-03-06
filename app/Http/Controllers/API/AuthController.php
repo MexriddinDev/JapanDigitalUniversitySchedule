@@ -19,25 +19,30 @@ class AuthController extends Controller
 
        User::query()->create($validatedData);
 
-        return response()->json('User successfully registered',201);
+        return response()->json([
+            'message'=>'User successfully registered'],201);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $validatedData = $request->validate([
-            'email' => 'email|required|exists:users|max:255',
+            'email' => 'email|required|exists:users,email|max:255',
             'password' => 'required|min:4'
         ]);
-        $user = User::query()->where('email', $validatedData['email'])->first();
+
+        $user = User::where('email', $validatedData['email'])->first();
+
         if (!$user || !Hash::check($validatedData['password'], $user->password)) {
-            return response()->json(['error' => 'Unauthorized'], 200);
+            return response()->json(['message' => 'The provided credentials are incorrect'], 401);
         }
+
         $token = $user->createToken('token')->plainTextToken;
 
         return response()->json([
             'message' => 'User successfully logged in',
             'user' => $user,
             'token' => $token
-        ]);
+        ], 200);
     }
     public function logout(Request $request){
         $request->user()->tokens()->delete();
